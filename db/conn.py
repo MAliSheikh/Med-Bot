@@ -7,7 +7,7 @@ MONGO_DETAILS = MONGO_URI # Change if using Atlas
 client = AsyncIOMotorClient(MONGO_DETAILS)
 database = client.ai_medical_app
 
-print("INFO:      Connected to MongoDB")
+print("INFO:     Connected to MongoDB")
 
 # Collections
 users_collection = database.get_collection("users")
