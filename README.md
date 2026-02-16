@@ -1,4 +1,4 @@
-# AI Medical Concierge App
+# MED BOT
 
 A smart health assistant application that helps users manage their own health and their family members’ health efficiently. The app uses AI, metadata, RAG, and memory to provide personalized health recommendations, manage reports, track medicines, and book doctors with available slots from registered hospitals.
 
@@ -6,7 +6,7 @@ A smart health assistant application that helps users manage their own health an
 
 ## Table of Contents
 
-- [AI Medical Concierge App](#ai-medical-concierge-app)
+- [MED BOT](#med-bot)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Features](#features)
@@ -15,6 +15,8 @@ A smart health assistant application that helps users manage their own health an
   - [AI Capabilities](#ai-capabilities)
   - [Entities \& Data Models](#entities--data-models)
   - [Future Enhancements](#future-enhancements)
+- [Press CTRL + SHIFT + V to see Preview](#press-ctrl--shift--v-to-see-preview)
+- [Run Command start.bat](#run-command-startbat)
 
 ---
 
@@ -94,4 +96,5 @@ The app provides a **dashboard**, **chat-based AI**, **report upload**, **doctor
 **This app acts as a personal medical assistant, providing a one-stop solution for users and their families while leveraging AI to make healthcare management smarter, faster, and safer.**
 
 
-Press CTRL + SHIFT + V to see Preview
+# Press CTRL + SHIFT + V to see Preview
+# Run Command start.bat 

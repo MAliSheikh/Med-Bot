@@ -48,3 +48,19 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+class UpdateUser(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    age: Optional[int] = None
+    gender: Optional[str] = None
+    family_members: Optional[List[FamilyMember]] = None
+    
+    # Additional health info
+    allergies: Optional[List[str]] = None
+    chronic_conditions: Optional[List[str]] = None
+    blood_type: Optional[str] = None
+    past_surgeries: Optional[List[str]] = None
+    genetic_disorders: Optional[List[str]] = None
+    preferences: Optional[dict] = None
+    emergency_contacts: Optional[List[dict]] = None
