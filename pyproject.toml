@@ -1,0 +1,17 @@
+[project]
+name = "med-bot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "bcrypt>=5.0.0",
+    "fastapi>=0.129.0",
+    "motor>=3.7.1",
+    "passlib>=1.7.4",
+    "pwdlib[argon2]>=0.3.0",
+    "pydantic[email]>=2.12.5",
+    "pyjwt>=2.11.0",
+    "python-multipart>=0.0.22",
+    "uvicorn[standard]>=0.40.0",
+]
