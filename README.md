@@ -1,12 +1,42 @@
 # MED BOT
+# Med Bot
 
 A smart health assistant application that helps users manage their own health and their family members’ health efficiently. The app uses AI, metadata, RAG, and memory to provide personalized health recommendations, manage reports, track medicines, and book doctors with available slots from registered hospitals.
 
----
+### Completed Tasks
+- [x] **Project Setup**: Basic FastAPI structure and configuration.
+- [x] **Authentication**: JWT-based user authentication.
+- [x] **LLM Integration**:
+  - [x] Integrated Groq API using OpenAI SDK.
+  - [x] Implemented robust Rate Limit handling (Exponential backoff & Header parsing).
+  - [x] Added support for multiple models (Llama 3.3, etc.) via configuration.
+- [x] **Report Processing**:
+  - [x] PDF Text Extraction.
+  - [x] Image OCR Extraction.
+  - [x] Structured Data Extraction using LLM (JSON format).
+- [x] **API Endpoints**:
+  - [x] `POST /report_analyze`: Upload and analyze reports.
+- [x] **Database**:
+  - [x] MongoDB connection.
+  - [x] Saving processed reports with user association.
+
+### Remaining Tasks
+- [ ] **API Endpoints**:
+  - [ ] `GET /reports`: Retrieve list of user's past reports.
+  - [ ] `GET /reports/{id}`: Retrieve specific report details and status.
+- [ ] **Langchain and RAG Implementaion**: On demand call cruds of db to get daat using langchain and train rag with data and pdfd
+- [ ] **Frontend**: Develop user interface for uploading and viewing reports.
+- [ ] **Testing**: Add unit and integration tests.
+- [ ] **Deployment**: Dockerize application and set up CI/CD.
+- [ ] **Refinement**: Improve OCR accuracy and LLM prompt guardrails.
+- [ ] **Error Handling**: Enhance global error handling and logging.
 
 ## Table of Contents
 
 - [MED BOT](#med-bot)
+- [Med Bot](#med-bot-1)
+    - [Completed Tasks](#completed-tasks)
+    - [Remaining Tasks](#remaining-tasks)
   - [Table of Contents](#table-of-contents)
   - [Overview](#overview)
   - [Features](#features)
