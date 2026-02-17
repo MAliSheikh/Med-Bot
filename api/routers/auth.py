@@ -2,10 +2,10 @@ from datetime import timedelta
 from typing import List, Annotated
 from fastapi import APIRouter, HTTPException, Depends, status
 from fastapi.security import  OAuth2PasswordRequestForm
-from cruds.auth.jwt_handler import create_access_token, get_current_user
+from api.func.auth.jwt_handler import create_access_token, get_current_user
 from models.user import Token, User, UserResponse, UpdateUser
 from db.conn import users_collection, user_helper
-from cruds.auth.auth import hash_password, verify_password
+from api.func.auth.auth import hash_password, verify_password
 from bson import ObjectId
 
 
@@ -47,7 +47,7 @@ async def read_users_me(current_user: Annotated[dict, Depends(get_current_user)]
 
 # Get all users
 @router.get("/users/", response_model=List[UserResponse])
-async def get_users():
+async def get_users(current_user: Annotated[dict, Depends(get_current_user)]):
     users = []
     async for user in users_collection.find():
         users.append(user_helper(user))
@@ -55,7 +55,7 @@ async def get_users():
 
 # Get user by id
 @router.get("/users/{id}", response_model=UserResponse)
-async def get_user(id: str):
+async def get_user(id: str, current_user: Annotated[dict, Depends(get_current_user)]):
     if not ObjectId.is_valid(id):
         raise HTTPException(status_code=400, detail=f"Invalid id: {id}")
     user = await users_collection.find_one({"_id": ObjectId(id)})
@@ -65,7 +65,7 @@ async def get_user(id: str):
 
 # Update user
 @router.put("/users/{id}", response_model=UserResponse)
-async def update_user(id: str, user_data: UpdateUser):
+async def update_user(id: str, user_data: UpdateUser, current_user: Annotated[dict, Depends(get_current_user)]):
     if not ObjectId.is_valid(id):
         raise HTTPException(status_code=400, detail=f"Invalid id: {id}")
     
@@ -87,7 +87,7 @@ async def update_user(id: str, user_data: UpdateUser):
 
 # Delete user
 @router.delete("/users/{id}", response_model=dict)
-async def delete_user(id: str):
+async def delete_user(id: str, current_user: Annotated[dict, Depends(get_current_user)]):
     if not ObjectId.is_valid(id):
         raise HTTPException(status_code=400, detail=f"Invalid id: {id}")
     
