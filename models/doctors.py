@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from typing import List, Optional
 from datetime import datetime
 
-from config import generate_id
+from core.config import generate_id
 
 # Doctor Models
 

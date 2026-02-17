@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from typing import List
 
-from config import generate_id
+from core.config import generate_id
 
 class HospitalCreate(BaseModel):
     name: str

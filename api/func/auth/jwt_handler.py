@@ -6,7 +6,7 @@ from fastapi import HTTPException, Depends, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from db.conn import users_collection, user_helper
-from config import SECRET_KEY, ALGORITHM
+from core.config import SECRET_KEY, ALGORITHM
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")

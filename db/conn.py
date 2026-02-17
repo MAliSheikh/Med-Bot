@@ -1,6 +1,6 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 from bson.objectid import ObjectId
-from config import MONGO_URI
+from core.config import MONGO_URI
 
 MONGO_DETAILS = MONGO_URI # Change if using Atlas
 
