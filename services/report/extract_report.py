@@ -2,7 +2,7 @@ import requests
 import time
 import pypdf
 from core import config
-from services import quota
+from services.report import quota
 
 def extract_text_from_pdf(file_file_obj):
     """
@@ -28,15 +28,16 @@ def extract_text_from_image(file_bytes, filename):
         print("Daily OCR limit reached")
         return None
 
-    url = "https://api.ocr.space/parse/image"
+    url = config.OCR_SPACE_API_URL
     
     # Prepare the file for the request
     files = {'file': (filename, file_bytes)}
-    data = {'apikey': config.OCR_API_KEY, 'language': 'eng', 'OCREngine': 2}
+    data = {'apikey': config.OCR_SPACE_API_KEY, 'language': 'eng', 'OCREngine': 2}
     
     try:
         resp = requests.post(url, files=files, data=data)
         result = resp.json()
+        # print(f"OCR Response: {result}")
     except Exception as e:
         print(f"OCR Request failed: {e}")
         return None

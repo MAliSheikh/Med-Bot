@@ -5,9 +5,14 @@ from uuid import uuid4
 # Load .env file
 load_dotenv()
 
-# Hugging Face Settings
-HF_API_KEY = os.getenv("HF_API_KEY", "YOUR_HF_API_KEY")
-HF_API_URL = os.getenv("HF_API_URL", "https://api-inference.huggingface.co/models/gpt2")
+# Groq Settings
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GROQ_API_URL = os.getenv("GROQ_API_URL")
+
+# OCR Space Settings
+OCR_SPACE_API_KEY = os.getenv("OCR_SPACE_API_KEY")
+OCR_SPACE_API_URL = os.getenv("OCR_SPACE_API_URL")
+OCR_DAILY_LIMIT=int(os.getenv("OCR_DAILY_LIMIT"))
 
 def generate_id():
     return str(uuid4())

@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException
 from api.func.auth.jwt_handler import get_current_user
-from services.report import extraction, llm
+from services.report import extract_report, llm
+from db.conn import users_collection
+import json
+from datetime import datetime
 
 router = APIRouter()
 
@@ -19,14 +22,14 @@ async def analyze_report(file: UploadFile = File(...), current_user: dict = Depe
     if file.content_type == "application/pdf":
         # Extract PDF Data
         print("Detected PDF. Extracting text directly...")
-        extracted_text = extraction.extract_text_from_pdf(file.file)
+        extracted_text = extract_report.extract_text_from_pdf(file.file)
         
     elif file.content_type.startswith("image/"):
         # Extract Image Data via OCR
         print("Detected Image. Sending to OCR...")
         # Read bytes for the requests library
         file_bytes = await file.read()
-        extracted_text = extraction.extract_text_from_image(file_bytes, file.filename)
+        extracted_text = extract_report.extract_text_from_image(file_bytes, file.filename)
         
     else:
         raise HTTPException(status_code=400, detail="Invalid file type. Only PDF and Images allowed.")
@@ -38,8 +41,28 @@ async def analyze_report(file: UploadFile = File(...), current_user: dict = Depe
     print("Sending text to LLM...")
     analysis_result = llm.analyze_text(extracted_text)
 
+    if "error" in analysis_result:
+        raise HTTPException(status_code=500, detail=analysis_result["error"])
+
+    # Parse JSON from LLM response
+    try:
+        # Clean up markdown formatting if present
+        json_str = analysis_result["analysis"].replace("```json", "").replace("```", "").strip()
+        report_data = json.loads(json_str)
+    except json.JSONDecodeError:
+        report_data = {"raw_output": analysis_result["analysis"], "error": "JSON parsing failed"}
+
+    # Save to MongoDB
+    doc = {
+        "user_id": current_user.get("id"),
+        "filename": file.filename,
+        "uploaded_at": datetime.now(),
+        "report_data": report_data
+    }
+    await users_collection.database["reports"].insert_one(doc)
+
     return {
         "filename": file.filename,
         "content_type": file.content_type,
-        "analysis": analysis_result
+        "analysis": report_data
     }
