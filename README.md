@@ -21,15 +21,13 @@ A smart health assistant application that helps users manage their own health an
   - [x] Saving processed reports with user association.
 
 ### Remaining Tasks
-- [ ] **API Endpoints**:
-  - [ ] `GET /reports`: Retrieve list of user's past reports.
-  - [ ] `GET /reports/{id}`: Retrieve specific report details and status.
+- [X] **API Endpoints**:
+  - [x] `GET /reports`: Retrieve list of user's past reports.
+  - [x] `GET /reports/{id}`: Retrieve specific report details and status.
+  - [x] `DELETE /reports/{id}`: Delete a specific report.
 - [ ] **Langchain and RAG Implementaion**: On demand call cruds of db to get daat using langchain and train rag with data and pdfd
 - [ ] **Frontend**: Develop user interface for uploading and viewing reports.
-- [ ] **Testing**: Add unit and integration tests.
-- [ ] **Deployment**: Dockerize application and set up CI/CD.
-- [ ] **Refinement**: Improve OCR accuracy and LLM prompt guardrails.
-- [ ] **Error Handling**: Enhance global error handling and logging.
+- [ ] **Deployment**: Dockerize application and set up CI/CD- [ ] - - [ ] **Error Handling**: Enhance global error handling and logging.
 
 ## Table of Contents
 
