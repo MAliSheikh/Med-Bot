@@ -2,88 +2,7 @@ import time
 import re
 from openai import OpenAI, RateLimitError, APIStatusError
 from core import config
-
-def get_guardrail_prompt(extracted_text):
-    """
-    Constructs a prompt that enforces JSON formatting and restricts hallucination.
-    """
-    # Truncate text to fit model context if necessary
-    safe_text = extracted_text[:2000]
-    
-    return f"""
-You are a strict medical document data extraction system.
-
-Analyze the text and extract ALL important structured medical information.
-
-STRICT RULES:
-1. Extract ONLY data explicitly present in the text.
-2. Do NOT guess, infer, or hallucinate.
-3. If a value is missing, return null.
-4. Preserve original units and numbers exactly.
-5. Output MUST be valid JSON only.
-6. Extract EVERY laboratory test found.
-7. Do not skip abnormal values.
-8. Dates must be in YYYY-MM-DD format if present.
-9. If unsure about document type, use "Other".
-
-TEXT:
-\"\"\"
-{safe_text}
-\"\"\"
-
-REQUIRED JSON FORMAT:
-
-{{
-  "document_type": "Lab Report | Prescription | Invoice | Other",
-
-  "metadata": {{
-    "patient_name": "string or null",
-    "patient_id": "string or null",
-    "age": "number or null",
-    "gender": "Male | Female | Other | null",
-    "report_date": "YYYY-MM-DD or null",
-    "doctor_name": "string or null",
-    "hospital_or_lab": "string or null"
-  }},
-
-  "lab_results": [
-    {{
-      "test_name": "string",
-      "value": "string or number or null",
-      "unit": "string or null",
-      "reference_range": "string or null",
-      "flag": "High | Low | Normal | Borderline | Abnormal | null"
-    }}
-  ],
-
-  "vitals": {{
-    "blood_pressure": "string or null",
-    "heart_rate": "number or null",
-    "temperature": "number or null",
-    "oxygen_saturation": "number or null"
-  }},
-
-  "medications": [
-    {{
-      "name": "string",
-      "dosage": "string or null",
-      "frequency": "string or null",
-      "duration": "string or null"
-    }}
-  ],
-
-  "clinical_findings": [
-    "string"
-  ],
-
-  "doctor_notes": "string or null",
-
-  "summary": "Concise factual summary of the document."
-}}
-
-JSON OUTPUT:
-"""
-
+from services.report.prompt import get_guardrail_prompt
 
 
 # --- Model Selection ---
@@ -148,8 +67,8 @@ def parse_rate_limit_headers(headers):
     
     return max(wait_req, wait_tok)
 
-def analyze_text(text):
-    prompt = get_guardrail_prompt(text)
+def analyze_text(text, user_info=None, past_reports=None):
+    prompt = get_guardrail_prompt(text, user_info=user_info, past_reports=past_reports)
     
     max_retries = 3
     

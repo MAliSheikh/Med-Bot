@@ -24,6 +24,7 @@ def user_helper(user) -> dict:
         "name": user.get("name", ""),
         "email": user.get("email", ""),
         "age": user.get("age", None),
+        "role": user.get("role", None),
         "gender": user.get("gender", ""),
         "family_members": user.get("family_members", []),
         "allergies": user.get("allergies", []),

@@ -1,7 +1,35 @@
 from typing import List, Optional
 from bson import ObjectId
 from db.conn import database
+from fastapi import UploadFile, File, HTTPException
+from services.report import extract_report, llm
 
+async def ai_analyze_report(file: UploadFile = File(...), user_info: dict = None, past_reports: List[dict] = None):
+    extracted_text = None
+    
+    # 1. Logic Twist: Check File Type
+    if file.content_type == "application/pdf":
+        # Extract PDF Data
+        print("Detected PDF. Extracting text directly...")
+        extracted_text = extract_report.extract_text_from_pdf(file.file)
+        
+    elif file.content_type.startswith("image/"):
+        # Extract Image Data via OCR
+        print("Detected Image. Sending to OCR...")
+        # Read bytes for the requests library
+        file_bytes = await file.read()
+        extracted_text = extract_report.extract_text_from_image(file_bytes, file.filename)
+        
+    else:
+        raise HTTPException(status_code=400, detail="Invalid file type. Only PDF and Images allowed.")
+
+    if not extracted_text:
+        raise HTTPException(status_code=422, detail="Could not extract text from file. It might be empty or quota exceeded.")
+
+    # 2. Send to Hugging Face
+    print("Sending text to LLM...")
+    analysis_result = llm.analyze_text(extracted_text, user_info, past_reports)
+    return analysis_result
 
 async def create_report(doc: dict) -> ObjectId:
     """Insert a report document and return the inserted id."""

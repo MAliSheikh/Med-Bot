@@ -13,6 +13,7 @@ class User(BaseModel):
     email: EmailStr
     password: str
     age: int
+    role: str
     gender: str
     family_members: Optional[List[FamilyMember]] = []
     
@@ -30,6 +31,7 @@ class UserResponse(BaseModel):
     name: str
     email: EmailStr
     age: int
+    role: str
     gender: str
     family_members: Optional[List[FamilyMember]] = []
     

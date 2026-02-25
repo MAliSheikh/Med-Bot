@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
 from api.func.auth.jwt_handler import get_current_user
-from services.report import extract_report, llm
 from api.func.reports.reports import (
+    ai_analyze_report,
     create_report,
     get_reports_by_user,
     get_report_by_id,
@@ -24,30 +24,11 @@ async def analyze_report(file: UploadFile = File(...), current_user: dict = Depe
     - Sends extracted text to LLM for structured analysis.
     """
     
-    extracted_text = None
+    # Fetch past reports for context
+    user_info = current_user
+    past_reports = await get_reports_by_user(current_user["id"], limit=5)
     
-    # 1. Logic Twist: Check File Type
-    if file.content_type == "application/pdf":
-        # Extract PDF Data
-        print("Detected PDF. Extracting text directly...")
-        extracted_text = extract_report.extract_text_from_pdf(file.file)
-        
-    elif file.content_type.startswith("image/"):
-        # Extract Image Data via OCR
-        print("Detected Image. Sending to OCR...")
-        # Read bytes for the requests library
-        file_bytes = await file.read()
-        extracted_text = extract_report.extract_text_from_image(file_bytes, file.filename)
-        
-    else:
-        raise HTTPException(status_code=400, detail="Invalid file type. Only PDF and Images allowed.")
-
-    if not extracted_text:
-        raise HTTPException(status_code=422, detail="Could not extract text from file. It might be empty or quota exceeded.")
-
-    # 2. Send to Hugging Face
-    print("Sending text to LLM...")
-    analysis_result = llm.analyze_text(extracted_text)
+    analysis_result = await ai_analyze_report(file, user_info, past_reports)
 
     if "error" in analysis_result:
         raise HTTPException(status_code=500, detail=analysis_result["error"])
