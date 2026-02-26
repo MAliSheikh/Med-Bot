@@ -15,7 +15,7 @@ OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
 # OCR Space Settings
 OCR_SPACE_API_KEY = os.getenv("OCR_SPACE_API_KEY")
 OCR_SPACE_API_URL = os.getenv("OCR_SPACE_API_URL")
-OCR_DAILY_LIMIT=int(os.getenv("OCR_DAILY_LIMIT"))
+OCR_DAILY_LIMIT=int(os.getenv("OCR_DAILY_LIMIT", "0"))
 
 def generate_id():
     return str(uuid4())

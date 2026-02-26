@@ -7,6 +7,9 @@ import math
 from core.config import GROQ_API_KEY, GROQ_API_URL, HUGGING_FACE_API_KEY, HUGGING_FACE_API_URL
 from services.rag.vector_store import get_lancedb_collection
 from services.report.prompt import get_rag_chat_guardrail_prompt
+from api.func.reports.reports import get_reports_by_user
+from db.conn import users_collection, user_helper
+from bson import ObjectId
 
 # GROQ_API_KEY = GROQ_API_KEY
 # GROQ_API_URL = GROQ_API_URL
@@ -51,7 +54,7 @@ def embed_query(text: str):
     return _simple_embed(text)
 
 
-def answer_query(user_question: str, user_info: dict = None, past_reports: list = None, top_k=5):
+async def answer_query(user_question: str, user_id: str, top_k=5):
     """Run a RAG query.
 
     The `user_question` is embedded for retrieval and also forwarded to the
@@ -70,6 +73,17 @@ def answer_query(user_question: str, user_info: dict = None, past_reports: list 
 
     # 3) build context
     context_text = "\n\n---\n\n".join([f"[source={m.get('source')} page={m.get('page')}]\n{d}" for m,d in zip(metadatas, docs)])
+
+    # Fetch user info and past reports from DB
+    print(f"DEBUG: Fetching data for user_id={user_id}...")
+    user = await users_collection.find_one({"_id": ObjectId(user_id)})
+    if user:
+        user_info = user_helper(user)
+    else:
+        print(f"WARNING: User {user_id} not found.")
+        user_info = {}
+
+    past_reports = await get_reports_by_user(user_id)
 
     # 4) build prompt using guardrail prompt and include the question
     prompt = get_rag_chat_guardrail_prompt(

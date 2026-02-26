@@ -8,14 +8,19 @@ import hashlib, re, math
 import shutil # Import shutil for directory removal
 
 def _simple_embed(text: str):
-    words = re.findall(r'\w+', text.lower())[:10]
-    embedding = [0.0] * 384
+    """Create a simple embedding using word hash vectors."""
+    dim = 384
+    words = re.findall(r'\w+', text.lower())
+    embedding = [0.0] * dim
     for word in words:
-        idx = int(hashlib.md5(word.encode()).hexdigest(), 16) % 384
-        embedding[idx] += 1
+        hash_val = int(hashlib.md5(word.encode()).hexdigest(), 16)
+        idx = hash_val % dim
+        embedding[idx] += 1.0
+    # Normalize
     norm = math.sqrt(sum(x**2 for x in embedding))
-    return [x/norm if norm else 0 for x in embedding]
-
+    if norm > 0:
+        embedding = [x / norm for x in embedding]
+    return embedding
 def chunk_text_safe(text):
     sentences = re.split(r'[.!?]+', text)
     chunks, current = [], ""
