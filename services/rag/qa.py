@@ -20,6 +20,15 @@ print("HUGGING_FACE_API_URL:", HUGGING_FACE_API_URL)
 GROQ_CHAT_MODEL = "openai/gpt-oss-120b"
 GROQ_EMBED_MODEL = "nomic-embed-text"
 
+FALLBACK_CONTEXT = """
+FEVER PROTOCOL (WHO Guidelines):
+- Paracetamol 500-1000mg every 6 hours if >38°C
+- Ibuprofen 400mg alternative
+- Hydrate 2-3L/day
+- Seek doctor if >3 days or >40°C
+Source: Standard emergency protocols
+"""
+
 # Simple embedding function using word hashing (no API needed)
 def _simple_embed(text: str, dim: int = 384) -> list:
     """Create a simple embedding using word hash vectors."""
@@ -87,7 +96,7 @@ async def answer_query(user_question: str, user_id: str, top_k=5):
 
     # 4) build prompt using guardrail prompt and include the question
     prompt = get_rag_chat_guardrail_prompt(
-        context_text,
+        context_text + FALLBACK_CONTEXT,
         user_info=user_info,
         past_reports=past_reports,
         question=user_question,
@@ -96,7 +105,7 @@ async def answer_query(user_question: str, user_id: str, top_k=5):
     # 5) call chat completion via Groq (using OpenAI-compatible API)
     if not GROQ_API_KEY:
         raise RuntimeError("GROQ_API_KEY not set")
-
+    print(prompt)
     print(f"DEBUG: Sending request to Groq ({GROQ_CHAT_MODEL})...")
     client = OpenAI(
         api_key=GROQ_API_KEY,

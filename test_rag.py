@@ -65,7 +65,8 @@ async def test_rag():
         await create_report(report_doc)
         print("Created test report")
         
-        question = "What are common causes of fever in adults?"
+        question = "What to do if i have fever"
+        # question = "I have high blood pressure and frequent headaches. Is this dangerous? What should I do?"
         print(f"\nQuestion: {question}")
         print(f"User ID: {user_id}")
         
