@@ -65,7 +65,19 @@ async def test_rag():
         await create_report(report_doc)
         print("Created test report")
         
-        question = "What to do if i have fever"
+        question = """A patient presents with symptoms that:
+
+Developed gradually over about one week
+
+Have been progressively worsening
+
+Total duration is less than six months
+
+Show partial response to treatment
+
+Question:
+
+Which pattern of disease onset does this most likely represent (Pattern 1, 2, 3, or 4), and what are the common etiological categories associated with this pattern?"""
         # question = "I have high blood pressure and frequent headaches. Is this dangerous? What should I do?"
         print(f"\nQuestion: {question}")
         print(f"User ID: {user_id}")
