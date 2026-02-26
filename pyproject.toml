@@ -7,14 +7,18 @@ requires-python = ">=3.12"
 dependencies = [
     "bcrypt>=5.0.0",
     "fastapi>=0.129.0",
+    "lancedb>=0.29.2",
     "motor>=3.7.1",
     "openai>=2.21.0",
+    "pandas>=3.0.1",
     "passlib>=1.7.4",
     "pwdlib[argon2]>=0.3.0",
     "pydantic[email]>=2.12.5",
     "pyjwt>=2.11.0",
+    "pymupdf>=1.27.1",
     "pypdf>=6.7.0",
     "python-multipart>=0.0.22",
     "requests>=2.32.5",
+    "sentence-transformers>=5.2.3",
     "uvicorn[standard]>=0.40.0",
 ]

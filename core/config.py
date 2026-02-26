@@ -9,6 +9,9 @@ load_dotenv()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_API_URL = os.getenv("GROQ_API_URL")
 
+# OpenAI Settings
+OPENAI_API_KEY=os.getenv("OPENAI_API_KEY")
+
 # OCR Space Settings
 OCR_SPACE_API_KEY = os.getenv("OCR_SPACE_API_KEY")
 OCR_SPACE_API_URL = os.getenv("OCR_SPACE_API_URL")
@@ -21,3 +24,7 @@ def generate_id():
 MONGO_URI = os.getenv("MONGO_DB_CONNECTION_STRING")
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = os.getenv("ALGORITHM")
+
+
+HUGGING_FACE_API_KEY = os.getenv("HUGGING_FACE_API_KEY")
+HUGGING_FACE_API_URL = os.getenv("HUGGING_FACE_API_URL", "https://router.huggingface.co/models/Xenova/nomic-embed-text-v1.5/v1")

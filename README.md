@@ -45,6 +45,7 @@ A smart health assistant application that helps users manage their own health an
   - [Future Enhancements](#future-enhancements)
 - [Press CTRL + SHIFT + V to see Preview](#press-ctrl--shift--v-to-see-preview)
 - [Run Command start.bat](#run-command-startbat)
+- [COLAB NOTEBOOK LINK](#colab-notebook-link)
 
 ---
 
@@ -126,3 +127,7 @@ The app provides a **dashboard**, **chat-based AI**, **report upload**, **doctor
 
 # Press CTRL + SHIFT + V to see Preview
 # Run Command start.bat 
+
+
+# COLAB NOTEBOOK LINK
+- https://colab.research.google.com/drive/17Ad_fBObdqMbY0BFZGBoVEG6RFD0CPW9?usp=sharing

@@ -111,3 +111,61 @@ def get_guardrail_prompt(extracted_text, user_info=None, past_reports=None ):
     # print(prompt)
 
     return prompt
+
+
+
+def get_rag_chat_guardrail_prompt(context_text, user_info, past_reports, question: str = None):
+    """
+    Strict RAG chat prompt for medical questions.
+    Ensures structured JSON output, prevents hallucinations,
+    recommends appointments without auto-booking.
+
+    The caller should pass the original user question so the model
+    knows what to answer.  If `question` is None we do not include it
+    (for backwards compatibility).
+    """
+    user_info_str = json.dumps(user_info, ensure_ascii=False, default=str) if user_info else "{}"
+
+    prompt = f"""
+        You are a highly accurate medical assistant AI.
+
+        Use ONLY the information provided in the MEDICAL CONTEXT below to answer the user's question.
+
+        STRICT RULES:
+        1. Do NOT hallucinate, infer, or guess.
+        2. Answer ONLY based on the context provided.
+        3. If the answer is unknown, say "I don't know based on the context."
+        4. Always produce clear, concise, factual answers.
+        5. Output MUST be valid JSON.
+        6. If relevant, recommend specialists, but only if clearly indicated by the context.
+        7. If an appointment is suggested, it is ONLY a recommendation; do NOT book automatically.
+        8. Use simple language if summarizing for the patient.
+        9. Preserve all numbers, units, and medical terminology exactly.
+
+        MEDICAL CONTEXT:
+        {context_text}
+
+        PAST REPORTS:
+        {past_reports}
+
+        USER INFO:
+        {user_info_str}
+"""
+    # append question if provided
+    if question:
+        prompt += f"\n\n        USER QUESTION:\n        {question}\n"""
+
+    prompt += f"""
+
+        REQUIRED JSON OUTPUT FORMAT:
+        {{
+          "answer_text": "Concise factual answer to user's question.",
+          "recommended_specialist": "Specialist type if applicable, else null",
+          "book_appointment": true/false,   # True = recommend to book, but do NOT book automatically
+          "reference_sources": ["List of context sources used, e.g., book name + page"],
+          "summary_for_patient": "Simple plain-language summary for patient if relevant"
+        }}
+
+        JSON OUTPUT:
+        """
+    return prompt
