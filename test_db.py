@@ -1,8 +1,8 @@
 import asyncio
 from motor.motor_asyncio import AsyncIOMotorClient
+from core.config import MONGO_URI
 
-uri = "mongodb+srv://malisheikh:KQshXA4XAHCgGmdS@cluster0.9hiztwt.mongodb.net/?appName=Cluster0"
-client = AsyncIOMotorClient(uri)
+client = AsyncIOMotorClient(MONGO_URI)
 db = client.test  # test database
 
 async def test_connection():

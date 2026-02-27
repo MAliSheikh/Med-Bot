@@ -7,6 +7,7 @@ from api.routers.hospitals import router as booking_router
 from api.routers.doctors import router as doctor_router
 from api.routers.appointments import router as appointment_router
 from api.routers.reports import router as report_router
+from api.routers.chat import router as chat_router
 
 app = FastAPI(title="Med Bot Backend APIS")
 
@@ -15,3 +16,4 @@ app.include_router(booking_router, prefix="/booking", tags=["Hospital Booking"])
 app.include_router(doctor_router, prefix="/doctors", tags=["Doctors"])
 app.include_router(appointment_router, prefix="/appointments", tags=["Appointments"])
 app.include_router(report_router, prefix="/reports", tags=["Medical Reports"])   
+app.include_router(chat_router, prefix="/chat", tags=["Chat"])

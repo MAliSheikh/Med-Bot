@@ -25,9 +25,9 @@ A smart health assistant application that helps users manage their own health an
   - [x] `GET /reports`: Retrieve list of user's past reports.
   - [x] `GET /reports/{id}`: Retrieve specific report details and status.
   - [x] `DELETE /reports/{id}`: Delete a specific report.
-- [ ] **Langchain and RAG Implementaion**: On demand call cruds of db to get daat using langchain and train rag with data and pdfd
+- [x] **Langchain and RAG Implementaion**: On demand call cruds of db to get daat using langchain and train rag with data and pdfd
 - [ ] **Frontend**: Develop user interface for uploading and viewing reports.
-- [ ] **Deployment**: Dockerize application and set up CI/CD- [ ] - - [ ] **Error Handling**: Enhance global error handling and logging.
+- [ ] **Deployment**: Dockerize application and set up CI/CD- - [x] **Error Handling**: Enhance global error handling and logging.
 
 ## Table of Contents
 
@@ -65,8 +65,6 @@ The app provides a **dashboard**, **chat-based AI**, **report upload**, **doctor
 - **Doctor Booking:** AI suggests specialists and hospitals; users can book available slots. Hospitals and doctors can register themselves.  
 - **Medicine Management:** Tracks prescription schedule, daily reminders, and refills.  
 - **Health History:** Tracks past reports, appointment history, and health trends.  
-- **Family Member Support:** Users can manage health for family members with separate profiles and reminders.  
-- **Emergency Handling:** Quick access to ambulance, hospital navigation, sharing health info, and emergency contacts.  
 
 ---
 
@@ -79,7 +77,6 @@ The app provides a **dashboard**, **chat-based AI**, **report upload**, **doctor
 5. **Doctor Suggestion & Booking:** AI recommends specialist and hospital; user confirms appointment.  
 6. **Prescription Tracking:** User adds prescriptions; daily reminders are sent.  
 7. **Historical Comparison:** AI compares new data with past reports for trends and insights.  
-8. **Family & Emergency:** Users manage family members and receive automated emergency assistance.
 
 ---
 

@@ -4,6 +4,7 @@ from openai import OpenAI
 import hashlib
 import re
 import math
+import json
 from core.config import GROQ_API_KEY, GROQ_API_URL, HUGGING_FACE_API_KEY, HUGGING_FACE_API_URL
 from services.rag.vector_store import get_lancedb_collection
 from services.report.prompt import get_rag_chat_guardrail_prompt
@@ -96,8 +97,8 @@ async def answer_query(user_question: str, user_id: str, top_k=5):
 
     # 4) build prompt using guardrail prompt and include the question
     prompt = get_rag_chat_guardrail_prompt(
-        context_text,
-        # context_text + FALLBACK_CONTEXT,
+        # context_text,
+        context_text + FALLBACK_CONTEXT,
         user_info=user_info,
         past_reports=past_reports,
         question=user_question,
@@ -119,4 +120,11 @@ async def answer_query(user_question: str, user_id: str, top_k=5):
         temperature=0.0,
     )
     print("DEBUG: Response received.")
-    return chat_resp
+    
+    content = chat_resp.choices[0].message.content
+    try:
+        # The content is a JSON string, so we parse it
+        return json.loads(content)
+    except json.JSONDecodeError:
+        # If it's not JSON, return the raw string
+        return content
