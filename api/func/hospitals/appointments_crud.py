@@ -90,6 +90,24 @@ async def cancel_appointment(appointment_id: str) -> bool:
     return False
 
 
+async def delete_appointment(appointment_id: str) -> bool:
+    """Permanently delete an appointment and return the slot to the doctor."""
+    appointment = await get_appointment(appointment_id)
+    if appointment:
+        # Return slot to doctor
+        doctor = await get_doctor(appointment.doctor_id)
+        if doctor:
+            if appointment.date_time not in doctor.available_slots:
+                doctor.available_slots.append(appointment.date_time)
+                doctor.available_slots.sort()
+                await update_doctor(doctor.id, available_slots=doctor.available_slots)
+
+        # Now, delete the appointment
+        result = await appointments_collection.delete_one({"_id": ObjectId(appointment_id)})
+        return result.deleted_count > 0
+    return False
+
+
 def appointment_helper(appointment) -> dict:
     """Convert MongoDB appointment document to dict"""
     return {

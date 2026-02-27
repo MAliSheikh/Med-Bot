@@ -2,6 +2,7 @@ from langchain_core.tools import Tool
 from api.func.hospitals.appointments_crud import (
     book_appointment,
     cancel_appointment,
+    delete_appointment,
     get_appointment,
     get_user_appointments,
     update_appointment,
@@ -47,6 +48,11 @@ tools = [
         name="CancelAppointment",
         func=cancel_appointment,
         description="Cancel an appointment and return the slot to the doctor. Required argument: appointment_id (from GetUserAppointments)"
+    ),
+    Tool.from_function(
+        name="DeleteAppointment",
+        func=delete_appointment,
+        description="Permanently deletes an appointment. This is irreversible. Also returns the time slot to the doctor. Requires appointment_id."
     ),
     Tool.from_function(
         name="GetAppointment",

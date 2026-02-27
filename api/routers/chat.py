@@ -9,9 +9,10 @@ import json
 import inspect
 from api.func.auth.jwt_handler import get_current_user
 from api.func.hospitals.doctors_crud import get_all_doctors, get_doctor
-from api.func.hospitals.appointments_crud import get_user_appointments
+from api.func.hospitals.appointments_crud import get_user_appointments, delete_appointment
 from bson.objectid import ObjectId
 from dateutil.parser import parse
+from difflib import SequenceMatcher
 
 router = APIRouter()
 
@@ -84,17 +85,18 @@ async def run_agent(user_message: str, user_id: str):
                 ObjectId(appointment_id)
             except:
                 user_appointments = await get_user_appointments(user_id)
-                if not user_appointments:
-                    return "You have no appointments to cancel."
-                if len(user_appointments) == 1:
-                    arguments["appointment_id"] = user_appointments[0].id
+                scheduled_appointments = [apt for apt in user_appointments if apt.status == "Scheduled"]
+                
+                if not scheduled_appointments:
+                    return "You have no scheduled appointments to cancel."
                 else:
-                    apt_details = []
-                    for apt in user_appointments:
-                        doctor = await get_doctor(apt.doctor_id)
-                        doctor_name = doctor.name if doctor else "Unknown"
-                        apt_details.append(f"ID: {apt.id} with Dr. {doctor_name} on {apt.date_time.strftime('%Y-%m-%d %H:%M')}")
-                    return "You have multiple appointments. Please specify which one to cancel by its ID:\n" + "\n".join(apt_details)
+                    # Take the first scheduled appointment and delete it.
+                    appointment_to_delete = scheduled_appointments[0]
+                    success = await delete_appointment(appointment_to_delete.id)
+                    if success:
+                        return f"Appointment {appointment_to_delete.id} has been automatically cancelled and deleted."
+                    else:
+                        return f"Failed to cancel appointment {appointment_to_delete.id}."
 
         if tool_name in ["BookAppointment", "UpdateAppointment"]:
             if tool_name == "BookAppointment" and "doctor_id" in arguments:
@@ -103,13 +105,16 @@ async def run_agent(user_message: str, user_id: str):
                     ObjectId(doctor_identifier)
                 except:
                     all_doctors = await get_all_doctors()
-                    found_doctor_id = None
+                    best_match = None
+                    highest_score = 0.0
                     for doc in all_doctors:
-                        if doc.name.lower() in doctor_identifier.lower():
-                            found_doctor_id = doc.id
-                            break
-                    if found_doctor_id:
-                        arguments["doctor_id"] = found_doctor_id
+                        score = SequenceMatcher(None, doc.name.lower(), doctor_identifier.lower()).ratio()
+                        if score > highest_score:
+                            highest_score = score
+                            best_match = doc
+                    
+                    if best_match and highest_score > 0.6: # Confidence threshold
+                        arguments["doctor_id"] = best_match.id
                     else:
                         return f"Could not find a doctor matching '{doctor_identifier}'."
 
